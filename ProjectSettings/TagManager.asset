@@ -5,6 +5,7 @@ TagManager:
   serializedVersion: 3
   tags:
   - Bolita
+  - Pared
   layers:
   - Default
   - TransparentFX

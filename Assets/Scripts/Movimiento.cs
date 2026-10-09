@@ -2,29 +2,43 @@ using UnityEngine;
 
 public class Movimiento : MonoBehaviour
 {
-    public float fuerza = 5f;
-    
-    public float velocidad = 1.5f;
+
+
+    public float fuerza = 10f;
+
+
+    public Rigidbody2D rigidbody2;
+
+
+    private void Start()
+    {
+        rigidbody2 = GetComponent<Rigidbody2D>();
+    }
+
     void Update()
     {
         if (Input.GetKey(KeyCode.LeftArrow))
         {
-            transform.Translate(Vector3.left * velocidad * Time.deltaTime);
+
+            rigidbody2.AddForce(Vector2.left * fuerza * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.RightArrow))
         {
-            transform.Translate(Vector3.right * velocidad * Time.deltaTime);
+
+            rigidbody2.AddForce(Vector2.right * fuerza * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.UpArrow))
         {
-            transform.Translate(Vector3.up * velocidad * Time.deltaTime);
+
+            rigidbody2.AddForce(Vector2.up * fuerza * Time.deltaTime);
         }
 
         if (Input.GetKey(KeyCode.DownArrow))
         {
-            transform.Translate(Vector3.down * velocidad * Time.deltaTime);
+
+            rigidbody2.AddForce(Vector2.down * fuerza * Time.deltaTime);
         }
     }
 }
