@@ -6,6 +6,9 @@ TagManager:
   tags:
   - Bolita
   - Pared
+  - Suelo
+  - Luna
+  - Estrella
   layers:
   - Default
   - TransparentFX
