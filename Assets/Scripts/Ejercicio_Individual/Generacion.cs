@@ -3,38 +3,59 @@ using UnityEngine;
 
 public class Generacion : MonoBehaviour
 {
+    [Header("Configuración del proyectil")]
     [SerializeField] private GameObject proyectilPrefab;
     [SerializeField] private float velocidad = 5f;
+
+    [Header("Dirección del disparo")]
+    [SerializeField, Range(0f, 360f)]
+    private float angulo = 0f;
+
+    [Header("Frecuencia de disparo")]
     [SerializeField] private float tiempoMinimo = 1f;
     [SerializeField] private float tiempoMaximo = 3f;
-    [SerializeField] private float distanciaLateral = 10f;
 
     private void Start()
     {
-        Invoke(nameof(GenerarProyectil), 1f);
+        Invoke(nameof(GenerarProyectil), Random.Range(tiempoMinimo, tiempoMaximo));
     }
 
     private void GenerarProyectil()
     {
-        int lado = Random.Range(0, 2);
+        if (proyectilPrefab == null)
+            return;
 
-        float direccion = lado == 0 ? 1f : -1f;
+        float radianes = angulo * Mathf.Deg2Rad;
 
-        Vector2 posicion = new Vector2(
-            transform.position.x + (distanciaLateral * direccion),
-            transform.position.y
+        Vector2 direccion = new Vector2(
+            Mathf.Cos(radianes),
+            Mathf.Sin(radianes)
         );
 
         GameObject nuevoProyectil = Instantiate(
             proyectilPrefab,
-            posicion,
+            transform.position,
             Quaternion.identity
         );
 
-        Proyectil movimiento = nuevoProyectil.GetComponent<Proyectil>();
+        Proyectil movimiento =
+            nuevoProyectil.GetComponent<Proyectil>();
 
-        movimiento.Configurar(-direccion, velocidad);
+        if (movimiento != null)
+        {
+            movimiento.Configurar(direccion, velocidad);
+        }
 
-        Invoke(nameof(GenerarProyectil), Random.Range(tiempoMinimo, tiempoMaximo));
+        float siguienteDisparo = Random.Range(
+            tiempoMinimo,
+            tiempoMaximo
+        );
+
+        Invoke(nameof(GenerarProyectil), siguienteDisparo);
+    }
+
+    private void OnDisable()
+    {
+        CancelInvoke();
     }
 }

@@ -3,31 +3,36 @@ using UnityEngine;
 
 public class Proyectil : MonoBehaviour
 {
+    private Vector2 direccion;
     private float velocidad;
-    private float direccion;
+    [Header("Tiempo de vida en segundos")]
+    [SerializeField] private float tiempoVida = 10f;
 
-    public void Configurar(float direccion, float velocidad)
+    public void Configurar(Vector2 direccion, float velocidad)
     {
-        this.direccion = direccion;
+        this.direccion = direccion.normalized;
         this.velocidad = velocidad;
 
-        float rotacion = direccion > 0 ? -90f : 90f;
-        transform.rotation = Quaternion.Euler(0f, 0f, rotacion);
+        float angulo = Mathf.Atan2(
+            this.direccion.y,
+            this.direccion.x
+        ) * Mathf.Rad2Deg;
+
+        transform.rotation = Quaternion.Euler(
+            0f, 0f, angulo - 90f
+        );
+
+        Destroy(gameObject, tiempoVida);
     }
 
     private void Update()
     {
-        transform.position += Vector3.right * direccion * velocidad * Time.deltaTime;
-
-        if (Mathf.Abs(transform.position.x) > 15f)
-        {
-            Destroy(gameObject);
-        }
+        transform.position += (Vector3)(direccion * velocidad * Time.deltaTime);
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        if (collision.gameObject.CompareTag("Luna"))
+        if (collision.CompareTag("Luna"))
         {
             Time.timeScale = 0f;
         }
